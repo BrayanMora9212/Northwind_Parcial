@@ -2,9 +2,214 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Gestion de productos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        caption {
+            caption-side: top;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div class="col-md-12">
 
+        <h1>Gestion de Productos</h1>
+        <div class=" col-md-12 text-right">
+            <button class="btn btn-primary btn-lg" id="btnAgregar">
+                <i class="fa fa-plus"></i> Agregar Nuevo Producto
+            </button>
+        </div>
+        <table id="tblProductos" class="table table-striped">
+            <caption>Edición de Productos</caption>
+            <thead class="thead-dark">
+                <tr>
+                    <th id="thNombre">Nombre del Producto</th>
+                    <th id="thCtdadPRoducto">Cantidad del Producto</th>
+                    <th id="thPrecUnitario">Precio Unitario</th>
+                    <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i>  Detalles</th>
+                    <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i>  Modificar</th>
+                    <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i>  Eliminar</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalEditarProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Nuevo Producto</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="txtNombreProducto">Nombre Producto:</label>
+                            <input type="text" id="txtNombreProducto" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtProveedorID"> Proveedor ID:</label>
+                            <input type="text" id="txtProveedorID" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtCanxUni"> Cantidad por unidad:</label>
+                            <input type="text" id="txtCanxUni" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtPrecioUni"> Precio Unitario:</label>
+                            <input type="text" id="txtPrecioUni" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</button>
+                    <button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var controladorProducto = {
+            init: function () {
+                controladorProducto.configurarEventos();
+                controladorProducto.consultarProductos();
+
+            },
+
+            configurarEventos: function () {
+                $('#btnAgregar').on('click', controladorProducto.abrirDialogoNuevoProducto);
+                $('#btnGuardarCambios').on('click', controladorProducto.guardarCambios);
+            },
+
+            abrirDialogoNuevoProducto: function () {
+                var modalProducto = $('#modalEditarProducto');
+                modalProducto.find('#tituloModal').text('Nuevo Producto');
+
+                modalProducto.find('#txtNombreProducto').val('').removeAttr('data-idcategoria');
+                modalProducto.find('#txtProveedorID').val('').removeAttr('data-idcategoria');
+                modalProducto.find('#txtCanxUni').val('').removeAttr('data-idcategoria');
+                modalProducto.find('#txtPrecioUni').val('').removeAttr('data-idcategoria');
+         
+                modalProducto.modal('show');
+            },
+
+            abrirDialogoEditarProducto: function () {
+                var idProducto = $(this).attr('data-id');
+                var Producto = controladorProducto.consultarProductoPorId(idProducto);
+
+                var modalProducto = $('#modalEditarProducto');
+                modalProducto.find('#tituloModal').text('Modificar Producto');
+                modalProducto.find('#txtNombreCategoria').val(categoria.CategoryName).attr('data-idcategoria', idCategoria);
+                modalProducto.find('#txtDescripcion').val(categoria.Description);
+                modalProducto.modal('show');
+
+            },
+
+            consultarCategoriaPorId: function (idCategoria) {
+                for (var i = 0; i < controladorCategoria.categorias.length; i++) {
+                    if (controladorCategoria.categorias[i].CategoryID == idCategoria) {
+                        return controladorCategoria.categorias[i];
+                    }
+                }
+            },
+
+            guardarCambios: function () {
+                var url = '/api/Productos/registrar';
+                var metodoHttp = 'POST';
+                var txtNombre = $('#txtNombreCategoria');
+
+                var categoria = {
+                    CategoryName: txtNombre.val(),
+                    Description: $('#txtDescripcion').val()
+                };
+
+
+                if (txtNombre.attr('data-idcategoria') !== undefined) {
+                    categoria.CategoryID = parseInt(txtNombre.attr('data-idcategoria'));
+                    url = '/api/categorias/modificar';
+                    metodoHttp = 'PUT';
+                }
+
+                $.ajax({
+                    url: '/api/Productos/modificar',
+                    type: 'POST',
+                    data: producto, //parametros que se envian al servidor
+                    dataType: 'json',
+                    success: controladorProducto.onRegistrarCompleto,
+                    error: controladorProducto.controlarError
+                });
+            },
+
+            onRegistrarCompleto: function (resultado) {
+                controladorProducto.consultarProductos();
+                console.log(resultado);
+                $('#modalEditarProducto').modal('hide');
+            },
+
+            consultarProductos: function () {
+                $.ajax({
+                    url: '/api/Productos/consultar',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: controladorProducto.cargarTablaProductos,
+                    error: controladorProducto.controlarError
+                });
+            },
+
+            cargarTablaProductos: function (datos) {
+                controladorProducto.producto = datos; //esto para guardar el arreglo de categorias en la memoria en el cliente y poder acceder a los objetos despues
+                var tblProductos = $('#tblProductos');
+                var tbody = tblProductos.find('tbody').empty();
+                for (var i = 0; i < datos.length; i++) {
+                    var fila = controladorProducto.crearFilaProducto(datos[i]);
+                    tbody.append(fila);
+                }
+            },
+
+            crearFilaProducto: function (producto) {
+                var fila = $('<tr>');
+                var tdNombre = $('<td>').text(producto.ProductName).attr('headers', 'thNombre');
+                var tdCtdadPRoducto = $('<td>').text(categoria.UnitsInStock).attr('headers', 'thCtdadPRoducto');
+                var tdPrecUnitario = $('<td>').text(categoria.UnitPrice).attr('headers', 'thPrecUnitario');
+
+                var tdDetalles = $('<td>').attr('headers', 'thDetalles');
+                var btnDetalles = $('<button>').addClass('btn btn-success');
+                btnDetalles.attr('data-id', producto.ProductID);
+                btnEditar.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
+
+                var tdEditar = $('<td>').attr('headers', 'thEditar');
+                var btnEditar = $('<button>').addClass('btn btn-success');
+                btnEditar.attr('data-id', producto.ProductID);
+                btnEditar.html('<i class="fa fa-pencil"></i> Modificar');
+                btnEditar.on('click', controladorProducto.abrirDialogoEditarProducto);
+
+                tdEditar.append(btnEditar);
+
+                fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar);
+                return fila;
+            },
+
+            controlarError: function (err) {
+                console.error(err);
+            }
+        };
+
+        controladorProducto.init();
+
+
+
+
+
+
+    </script>  
 </body>
 </html>

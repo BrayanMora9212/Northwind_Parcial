@@ -39,12 +39,12 @@ namespace NorthwindWebAPI.Controllers
 
 
         [HttpPut]
-        [Route("api/categorias/modificar")]
-        public string modificarCategoria(Categories categoria)
+        [Route("api/Productos/modificar")]
+        public string modificarProductos(Products productos)
         {
-            var dao = new CategoriaDAO();
-            int resultado = dao.modificarCategoria(categoria);
-            return (resultado > 0) ? "Se actualizó la categoría" : "Ocurrió un error al modificar la categoría";
+            var dao = new ProductoDAO();
+            int resultado = dao.modificarProductos(productos);
+            return (resultado > 0) ? "Se actualizó el producto" : "Ocurrió un error al modificar el producto";
         }
 
 

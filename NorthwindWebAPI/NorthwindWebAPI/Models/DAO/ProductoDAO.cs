@@ -37,5 +37,18 @@ namespace NorthwindWebAPI.Models.DAO
         {
             throw new NotImplementedException();
         }
+
+        public int modificarProductos(Products nuevosDatosProductos)
+        {
+            using (var cnn = new NorthwindEntities())
+            {
+                var anteriorProducto = cnn.Products.SingleOrDefault(c => c.ProductID.Equals(nuevosDatosProductos.ProductID));
+                anteriorProducto.ProductName = nuevosDatosProductos.ProductName;
+                anteriorProducto.UnitsInStock = nuevosDatosProductos.UnitsInStock;
+                anteriorProducto.UnitPrice = nuevosDatosProductos.UnitPrice;
+                cnn.Entry(anteriorProducto).State = System.Data.Entity.EntityState.Modified;
+                return cnn.SaveChanges();
+            }
+        }
     }
 }
