@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gestión de Categorías</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+
+        caption {
+            caption-side:top;
+            text-align:center;
+            font-size:16px;
+            font-weight:bold;
+        }
+
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <h1>Gestión de Categorías</h1>
+
+    <div class="col-md-12">
+
+        <div class=" col-md-12 text-right">
+            <button class="btn btn-primary btn-lg" id="btnAgregar">
+                <i class="fa fa-plus"></i> Agregar Nueva Categoría
+            </button>
+        </div>
+
+        <table id="tblCategorias" class="table table-striped">
+            <caption>Edición de Categorías</caption>
+            <thead class="thead-dark">
+                <tr>
+                    <th id="thNombre">Nombre de Categoría</th>
+                    <th id="thDescripcion">Descripción</th>
+                    <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i>  Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalEditarCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal">Nueva Categoría</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="txtNombreCategoria">Nombre Categoría:</label>
+                            <input type="text" id="txtNombreCategoria" class="form-control"  />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtDescripcion">Descripción Categoría:</label>
+                            <textarea class="form-control" id="txtDescripcion"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</button>
+                    <button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+
+        var controladorCategoria = {
+
+            init: function () {
+                controladorCategoria.configurarEventos();
+                controladorCategoria.consultarCategorias();
+
+            },
+
+            configurarEventos: function () {
+                $('#btnAgregar').on('click', controladorCategoria.abrirDialogoNuevaCategoria);
+                $('#btnGuardarCambios').on('click', controladorCategoria.guardarCambios);
+            },
+
+            abrirDialogoNuevaCategoria: function () {
+                var modalCategoria = $('#modalEditarCategoria');
+                modalCategoria.find('#tituloModal').text('Nueva Categoría');
+                modalCategoria.find('#txtNombreCategoria').val('').removeAttr('data-idcategoria');
+                modalCategoria.find('#txtDescripcion').val('');
+                modalCategoria.modal('show');
+            },
+
+            abrirDialogoEditarCategoria: function () {
+                var idCategoria = $(this).attr('data-id');
+                var categoria = controladorCategoria.consultarCategoriaPorId(idCategoria);
+
+                var modalCategoria = $('#modalEditarCategoria');
+                modalCategoria.find('#tituloModal').text('Modificar Categoría');
+                modalCategoria.find('#txtNombreCategoria').val(categoria.CategoryName).attr('data-idcategoria', idCategoria);
+                modalCategoria.find('#txtDescripcion').val(categoria.Description);
+                modalCategoria.modal('show');
+
+            },
+
+            consultarCategoriaPorId: function (idCategoria) {
+                for (var i = 0; i < controladorCategoria.categorias.length; i++) {
+                    if (controladorCategoria.categorias[i].CategoryID == idCategoria) {
+                        return controladorCategoria.categorias[i];
+                    }
+                }
+            },
+
+            guardarCambios: function () {
+                var url = '/api/categorias/registrar'; 
+                var metodoHttp = 'POST';
+                var txtNombre = $('#txtNombreCategoria');
+
+                var categoria = {
+                    CategoryName: txtNombre.val(),
+                    Description: $('#txtDescripcion').val()
+                };
+
+
+                if (txtNombre.attr('data-idcategoria') !== undefined) {
+                    categoria.CategoryID = parseInt(txtNombre.attr('data-idcategoria'));
+                    url = '/api/categorias/modificar';
+                    metodoHttp = 'PUT';
+                }
+                
+                $.ajax({
+                    url: url,
+                    type: metodoHttp,
+                    data: categoria, //parametros que se envian al servidor
+                    dataType: 'json',
+                    success: controladorCategoria.onRegistrarCompleto,
+                    error: controladorCategoria.controlarError
+                });
+            },
+
+            onRegistrarCompleto: function (resultado) {
+                controladorCategoria.consultarCategorias();
+                console.log(resultado);
+                $('#modalEditarCategoria').modal('hide');
+            },
+            
+            consultarCategorias: function () {
+                $.ajax({
+                    url: '/api/categorias/consultar',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: controladorCategoria.cargarTablaCategorias,
+                    error: controladorCategoria.controlarError
+                });
+            },
+
+            cargarTablaCategorias: function (datos) {
+                controladorCategoria.categorias = datos; //esto para guardar el arreglo de categorias en la memoria en el cliente y poder acceder a los objetos despues
+                var tblCategorias = $('#tblCategorias');
+                var tbody = tblCategorias.find('tbody').empty();
+                for (var i = 0; i < datos.length; i++) {
+                    var fila = controladorCategoria.crearFilaCategoria(datos[i]);
+                    tbody.append(fila);
+                }
+            },
+
+            crearFilaCategoria: function (categoria) {
+                var fila = $('<tr>');
+                var tdNombre = $('<td>').text(categoria.CategoryName).attr('headers', 'thNombre');
+                var tdDescripcion = $('<td>').text(categoria.Description).attr('headers', 'thDescripcion');
+
+                var tdEditar = $('<td>').attr('headers', 'thEditar');
+                var btnEditar = $('<button>').addClass('btn btn-success');
+                btnEditar.attr('data-id', categoria.CategoryID);
+                btnEditar.html('<i class="fa fa-pencil"></i> Modificar');
+
+                btnEditar.on('click', controladorCategoria.abrirDialogoEditarCategoria);
+
+                tdEditar.append(btnEditar);
+
+                fila.append(tdNombre, tdDescripcion, tdEditar);
+                return fila;
+            },
+
+            controlarError: function (err) {
+                console.error(err);
+            }
+        };
+
+        controladorCategoria.init();
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>
