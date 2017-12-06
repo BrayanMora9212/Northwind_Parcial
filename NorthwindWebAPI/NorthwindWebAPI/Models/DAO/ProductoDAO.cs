@@ -50,5 +50,17 @@ namespace NorthwindWebAPI.Models.DAO
                 return cnn.SaveChanges();
             }
         }
+        public int EliminarProducto(object EliminarProducto)
+        {
+            using(var cnn=new NorthwindEntities())
+            {
+                var anteriorProducto = cnn.Products.SingleOrDefault(c => c.ProductID.Equals(EliminarProducto.ProductID));
+                anteriorProducto.ProductName = EliminarProducto.ProductName;
+                anteriorProducto.QuantityPerUnit = EliminarProducto.QuantityPerUnit;
+                anteriorProducto.UnitPrice =EliminarProducto.UnitPrice;
+                cnn.Entry(anteriorProducto).State = System.Data.Entity.EntityState.Deleted;
+                return cnn.SaveChanges();
+            }
+        }
     }
 }

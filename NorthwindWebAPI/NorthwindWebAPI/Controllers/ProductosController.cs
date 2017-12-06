@@ -47,6 +47,15 @@ namespace NorthwindWebAPI.Controllers
             return (resultado > 0) ? "Se actualizó el producto" : "Ocurrió un error al modificar el producto";
         }
 
+        [HttpPut]
+        [Route("api/Productos/modificar")]
+        public string EliminarProductos(Products productos)
+        {
+            var dao = new ProductoDAO();
+            int resultado = dao.EliminarProductos(productos);
+            return (resultado > 0) ? "Se Elimino el producto" : "Ocurrió un error al eliminar el producto";
+        }
+
 
 
     }
