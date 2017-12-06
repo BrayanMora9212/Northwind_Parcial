@@ -182,7 +182,7 @@
                 var tdDetalles = $('<td>').attr('headers', 'thDetalles');
                 var btnDetalles = $('<button>').addClass('btn btn-success');
                 btnDetalles.attr('data-id', producto.ProductID);
-                btnEditar.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
+                btnDetalles.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
                 tdDetalles.append(btnDetalles);
 
                 var tdEditar = $('<td>').attr('headers', 'thEditar');
@@ -195,9 +195,9 @@
                 var tdEliminar = $('<td>').attr('headers', 'thEliminar');
                 var btnEliminar = $('<button>').addClass('btn btn-warning');
                 btnEliminar.attr('data-id', producto.ProductID);
-                btnEditar.html('<i class="fa fa-pencil"></i> Eliminar');
-                btnEditar.on('click', controladorProducto.abrirDialogoEditarProducto);
-                tdEditar.append(btnEditar);
+                btnEliminar.html('<i class="fa fa-pencil"></i> Eliminar');
+                btnEliminar.on('click', controladorProducto.abrirDialogoEditarProducto);
+                tdEliminar.append(btnEliminar);
 
                 fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar);
                 return fila;
