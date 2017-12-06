@@ -34,6 +34,7 @@
                     <th id="thCtdadPRoducto">Cantidad por Unidad</th>
                     <th id="thPrecUnitario">Precio Unitario</th>
                     <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i> Modificar</th>
+                    <th id="thAgregar"><i class="fa fa-pencil" aria-hidden="true"></i>Agregar</th>
                     <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i> Detalles</th>
                     <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</th>
                 </tr>
@@ -74,6 +75,73 @@
         </div>
     </div>
 
+    <!-- Modal Detalle-->
+
+    <div class="modal fade" id="modalDetalleProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal1">Detalles Del Producto</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="txtNombreProducto">Nombre Producto:</label>
+                            <input type="text" id="txtNombreProducto" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtCantidad">Cantidad Por Unidad:</label>
+                            <textarea class="form-control" id="txtCantidad"></textarea>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtPrecio">Precio Unitario:</label>
+                            <textarea class="form-control" id="txtPrecio"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</button>-->
+                    <!--<button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Aceptar</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar producto-->
+
+    <div class="modal fade" id="modalEliminarProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModal1">Eliminar Producto</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="txtNombreProducto">Nombre Producto:</label>
+                            <input type="text" id="txtNombreProducto" class="form-control" />
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtCantidad">Cantidad Por Unidad:</label>
+                            <textarea class="form-control" id="txtCantidad"></textarea>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="txtPrecio">Precio Unitario:</label>
+                            <textarea class="form-control" id="txtPrecio"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Eliminar</button>
+                    <button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <script>
         var controladorProducto = {
             init: function () {
@@ -108,9 +176,30 @@
                 modalProducto.find('#txtCanxUni').val(Producto.QuantityPerUnit);
                 modalProducto.find('#txtPrecioUni').val(Producto.UnitPrice);
                 modalProducto.modal('show');
+            },
 
-         
+            abrirDialogoDetalleProducto: function () {
+                var idProducto = $(this).attr('data-id');
+                var productos = controladorProducto.consultarProductosPorId(idProducto);
+                //var modalProducto = $('#modalEditarProducto');
+                var modalProducto = $('#modalDetalleProducto');
+                modalProducto.find('#tituloModal1').text('Detalle del Producto');
+                modalProducto.find('#txtNombreProducto').val(producto.ProductName).attr('data-idProducto', idProducto);
+                modalProducto.find('#txtCantidad').val(producto.QuantityPerUnit);
+                modalProducto.find('#txtPrecio').val(producto.UnitPrice);
+                modalProducto.modal('show');
 
+            },
+            abrirDialogoEliminarProducto: function () {
+                var idProducto = $(this).attr('data-id');
+                var productos = controladorProducto.eliminarProductosPorId(idProducto);
+
+                var modalProducto = $('#modalEliminarProducto');
+                modalProducto.find('#tituloModal1').text('Eliminar Producto');
+                modalProducto.find('#txtNombreProducto').val(productos.ProductName).attr('data-idProducto', idProducto);
+                modalProducto.find('#txtCantidad').val(productos.QuantityPerUnit);
+                modalProducto.find('#txtPrecio').val(productos.UnitPrice);
+                modalProducto.modal('show');
 
             },
 
@@ -181,14 +270,20 @@
                 var tdNombre = $('<td>').text(producto.ProductName).attr('headers', 'thNombre');
                 var tdCtdadPRoducto = $('<td>').text(producto.QuantityPerUnit).attr('headers', 'thCtdadPRoducto');
                 var tdPrecUnitario = $('<td>').text(producto.UnitPrice).attr('headers', 'thPrecUnitario');
+                var tdDetalle = $('<td>').attr('headers', 'thDetalles');
+                var btnDetalle = $('<button>').addClass('btn btn-success');
+                btnDetalle.attr('data-id', producto.ProductID);
+                btnDetalle.html('<i class="fa fa-pencil"></i> Detalles');
+                btnDetalle.on('click', controladorProducto.abrirDialogoDetalleProductod);
+                tdDetalle.append(btnDetalle);
 
-                var tdDetalles = $('<td>').attr('headers', 'thDetalles');
-                var btnDetalles = $('<button>').addClass('btn btn-success');
-                btnDetalles.attr('data-id', producto.ProductID);
-                btnDetalles.html('<i class="fa fa-info-circle" aria-hidden="true"></i>Detalles');
-                btnDetalles.on('click', controladorProducto.abrirDialogoEditarProducto);
-                tdDetalles.append(btnDetalles);
-
+             /*   var tdEliminar = $('<td>').attr('headers', 'tdEliminar');
+                var btnEliminar = $('<button>').addClass('btn btn-success');
+                btnEliminar.attr('data-id', productos.ProductID);
+                btnEliminar.html('<i class="fa fa-pencil"></i> Eliminar');
+                btnEliminar.on('click', controladorProducto.abrirDialogoEliminarProducto);
+                tdEliminar.append(btnEliminar);
+                */
                 var tdEditar = $('<td>').attr('headers', 'thEditar');
                 var btnEditar = $('<button>').addClass('btn btn-success');
                 btnEditar.attr('data-id', producto.ProductID);
@@ -196,14 +291,9 @@
                 btnEditar.on('click', controladorProducto.abrirDialogoEditarProducto);
                 tdEditar.append(btnEditar);
 
-                var tdEliminar = $('<td>').attr('headers', 'thEliminar');
-                var btnEliminar = $('<button>').addClass('btn btn-warning');
-                btnEliminar.attr('data-id', producto.ProductID);
-                btnEliminar.html('<i class="fa fa-pencil"></i> Eliminar');
-                btnEliminar.on('click', controladorProducto.abrirDialogoEditarProducto);
-                tdEliminar.append(btnEliminar);
+                
 
-                fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar);
+                fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar,tdEliminar);
                 return fila;
             },
 
@@ -213,7 +303,6 @@
         };
 
         controladorProducto.init();
-
-                                            </script>  
+ </script>  
 </body>
 </html>
