@@ -34,7 +34,6 @@
                     <th id="thCtdadPRoducto">Cantidad por Unidad</th>
                     <th id="thPrecUnitario">Precio Unitario</th>
                     <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i> Modificar</th>
-                    <th id="thAgregar"><i class="fa fa-pencil" aria-hidden="true"></i>Agregar</th>
                     <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i> Detalles</th>
                     <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</th>
                 </tr>
@@ -90,18 +89,18 @@
                             <input type="text" id="txtNombreProducto" class="form-control" />
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="txtCantidad">Cantidad Por Unidad:</label>
-                            <textarea class="form-control" id="txtCantidad"></textarea>
+                            <label for="txtCanxUni">Cantidad Por Unidad:</label>
+                            <input type="text" id="txtCanxUni" class="form-control" />
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="txtPrecio">Precio Unitario:</label>
-                            <textarea class="form-control" id="txtPrecio"></textarea>
+                            <label for="txtPrecioUni">Precio Unitario:</label>
+                            <input type="text" id="txtPrecioUni" class="form-control" />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <!--<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</button>-->
-                    <!--<button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Aceptar</button>-->
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</button>
+                    <button type="button" id="btnGuardarCambios" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i> Aceptar</button>
                 </div>
             </div>
         </div>
@@ -113,7 +112,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tituloModal1">Eliminar Producto</h5>
+                    <h5 class="modal-title" id="tituloModal2">Eliminar Producto</h5>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -122,12 +121,12 @@
                             <input type="text" id="txtNombreProducto" class="form-control" />
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="txtCantidad">Cantidad Por Unidad:</label>
-                            <textarea class="form-control" id="txtCantidad"></textarea>
+                            <label for="txtCanxUni">Cantidad Por Unidad:</label>
+                            <input type="text" id="txtCanxUni" class="form-control" />
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="txtPrecio">Precio Unitario:</label>
-                            <textarea class="form-control" id="txtPrecio"></textarea>
+                            <label for="txtPrecioUni">Precio Unitario:</label>
+                            <input type="text" id="txtPrecioUni" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -153,6 +152,10 @@
             configurarEventos: function () {
                 $('#btnAgregar').on('click', controladorProducto.abrirDialogoNuevoProducto);
                 $('#btnGuardarCambios').on('click', controladorProducto.guardarCambios);
+
+                $('#btnAgregar').on('click', controladorProducto.abrirDialogoNuevoProducto);
+                $('#btnGuardarCambios').on('click', controladorProducto.guardarCambios);
+
             },
 
             abrirDialogoNuevoProducto: function () {
@@ -181,12 +184,12 @@
             abrirDialogoDetalleProducto: function () {
                 var idProducto = $(this).attr('data-id');
                 var productos = controladorProducto.consultarProductosPorId(idProducto);
-                //var modalProducto = $('#modalEditarProducto');
-                var modalProducto = $('#modalDetalleProducto');
-                modalProducto.find('#tituloModal1').text('Detalle del Producto');
+
+                var modalProducto = $('#modalEditarProducto');//cambio 1
+                modalProducto.find('#tituloModal').text('Detalle del Producto');// cambio 2
                 modalProducto.find('#txtNombreProducto').val(producto.ProductName).attr('data-idProducto', idProducto);
-                modalProducto.find('#txtCantidad').val(producto.QuantityPerUnit);
-                modalProducto.find('#txtPrecio').val(producto.UnitPrice);
+                modalProducto.find('#txtCanxUni').val(producto.QuantityPerUnit);
+                modalProducto.find('#txtPrecioUni').val(producto.UnitPrice);
                 modalProducto.modal('show');
 
             },
@@ -195,10 +198,10 @@
                 var productos = controladorProducto.eliminarProductosPorId(idProducto);
 
                 var modalProducto = $('#modalEliminarProducto');
-                modalProducto.find('#tituloModal1').text('Eliminar Producto');
+                modalProducto.find('#tituloModal2').text('Eliminar Producto');
                 modalProducto.find('#txtNombreProducto').val(productos.ProductName).attr('data-idProducto', idProducto);
-                modalProducto.find('#txtCantidad').val(productos.QuantityPerUnit);
-                modalProducto.find('#txtPrecio').val(productos.UnitPrice);
+                modalProducto.find('#txtCanxUni').val(productos.QuantityPerUnit);
+                modalProducto.find('#txtPrecioUni').val(productos.UnitPrice);
                 modalProducto.modal('show');
 
             },
@@ -270,20 +273,21 @@
                 var tdNombre = $('<td>').text(producto.ProductName).attr('headers', 'thNombre');
                 var tdCtdadPRoducto = $('<td>').text(producto.QuantityPerUnit).attr('headers', 'thCtdadPRoducto');
                 var tdPrecUnitario = $('<td>').text(producto.UnitPrice).attr('headers', 'thPrecUnitario');
+
                 var tdDetalle = $('<td>').attr('headers', 'thDetalles');
-                var btnDetalle = $('<button>').addClass('btn btn-success');
+                var btnDetalle = $('<button>').addClass('btn btn-info');
                 btnDetalle.attr('data-id', producto.ProductID);
-                btnDetalle.html('<i class="fa fa-pencil"></i> Detalles');
-                btnDetalle.on('click', controladorProducto.abrirDialogoDetalleProductod);
+                btnDetalle.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
+                btnDetalle.on('click', controladorProducto.abrirDialogoNuevoProducto);
                 tdDetalle.append(btnDetalle);
 
-             /*   var tdEliminar = $('<td>').attr('headers', 'tdEliminar');
-                var btnEliminar = $('<button>').addClass('btn btn-success');
-                btnEliminar.attr('data-id', productos.ProductID);
-                btnEliminar.html('<i class="fa fa-pencil"></i> Eliminar');
+                var tdEliminar = $('<td>').attr('headers', 'thEliminar');
+                var btnEliminar = $('<button>').addClass('btn btn-danger');
+                btnEliminar.attr('data-id', producto.ProductID);
+                btnEliminar.html('<i class="fa fa-trash" aria-hidden="true"></i> Eliminar');
                 btnEliminar.on('click', controladorProducto.abrirDialogoEliminarProducto);
                 tdEliminar.append(btnEliminar);
-                */
+                
                 var tdEditar = $('<td>').attr('headers', 'thEditar');
                 var btnEditar = $('<button>').addClass('btn btn-success');
                 btnEditar.attr('data-id', producto.ProductID);
@@ -293,7 +297,7 @@
 
                 
 
-                fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar,tdDetalle);
+                fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar, tdDetalle, tdEliminar);
                 return fila;
             },
 

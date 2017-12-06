@@ -52,7 +52,7 @@ namespace NorthwindWebAPI.Controllers
         public string EliminarProductos(Products productos)
         {
             var dao = new ProductoDAO();
-            int resultado = dao.EliminarProductos(productos);
+            int resultado = dao.EliminarProducto(productos);
             return (resultado > 0) ? "Se Elimino el producto" : "Ocurrió un error al eliminar el producto";
         }
 
