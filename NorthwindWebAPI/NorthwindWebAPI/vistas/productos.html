@@ -33,8 +33,8 @@
                     <th id="thNombre">Nombre del Producto</th>
                     <th id="thCtdadPRoducto">Cantidad por Unidad</th>
                     <th id="thPrecUnitario">Precio Unitario</th>
-                    <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i> Detalles</th>
                     <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i> Modificar</th>
+                    <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i> Detalles</th>
                     <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</th>
                 </tr>
             </thead>
@@ -109,6 +109,9 @@
                 modalProducto.find('#txtPrecioUni').val(Producto.UnitPrice);
                 modalProducto.modal('show');
 
+         
+
+
             },
 
             consultarProductoPorId: function (idProducto) {
@@ -182,7 +185,8 @@
                 var tdDetalles = $('<td>').attr('headers', 'thDetalles');
                 var btnDetalles = $('<button>').addClass('btn btn-success');
                 btnDetalles.attr('data-id', producto.ProductID);
-                btnDetalles.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
+                btnDetalles.html('<i class="fa fa-info-circle" aria-hidden="true"></i>Detalles');
+                btnDetalles.on('click', controladorProducto.abrirDialogoEditarProducto);
                 tdDetalles.append(btnDetalles);
 
                 var tdEditar = $('<td>').attr('headers', 'thEditar');
