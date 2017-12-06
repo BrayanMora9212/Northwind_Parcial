@@ -17,8 +17,8 @@ namespace NorthwindWebAPI.Models.DAO
 
                     ProductID = c.ProductID,
                     ProductName = c.ProductName,
-                    UnitsInStock = c.UnitsInStock,
-                    UniPrice = c.UnitPrice
+                    QuantityPerUnit = c.QuantityPerUnit,
+                    UnitPrice = c.UnitPrice
 
                 }).ToList();
             }
@@ -44,7 +44,7 @@ namespace NorthwindWebAPI.Models.DAO
             {
                 var anteriorProducto = cnn.Products.SingleOrDefault(c => c.ProductID.Equals(nuevosDatosProductos.ProductID));
                 anteriorProducto.ProductName = nuevosDatosProductos.ProductName;
-                anteriorProducto.UnitsInStock = nuevosDatosProductos.UnitsInStock;
+                anteriorProducto.QuantityPerUnit= nuevosDatosProductos.QuantityPerUnit;
                 anteriorProducto.UnitPrice = nuevosDatosProductos.UnitPrice;
                 cnn.Entry(anteriorProducto).State = System.Data.Entity.EntityState.Modified;
                 return cnn.SaveChanges();

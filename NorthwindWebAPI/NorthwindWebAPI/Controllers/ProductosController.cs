@@ -14,7 +14,7 @@ namespace NorthwindWebAPI.Controllers
     public class ProductosController : ApiController
     {
         [HttpGet]
-        [Route("api/productos/consultar")]
+        [Route("api/Productos/consultar")]
         public List<ProductosVO> ConsultarProductos()
         {
             return new ProductoDAO().ConsultarProductos();
@@ -30,7 +30,7 @@ namespace NorthwindWebAPI.Controllers
             {
                 ProductID = int.Parse(parametros["ProductID"]),
                 ProductName = parametros["ProductName"],    
-                UnitsInStock = short.Parse(parametros["UnitsInStock"]),
+                QuantityPerUnit = parametros["QuantityPerUnit"],
                 UnitPrice =  decimal.Parse(parametros["UnitPrice"])
               };
             int resultado = dao.registrarProducto(nuevoProducto);
@@ -40,7 +40,7 @@ namespace NorthwindWebAPI.Controllers
 
         [HttpPut]
         [Route("api/Productos/modificar")]
-        public string modificarProductos(Products productos)
+        public string ModificarProductos(Products productos)
         {
             var dao = new ProductoDAO();
             int resultado = dao.modificarProductos(productos);

@@ -7,8 +7,8 @@ namespace NorthwindWebAPI.Models.VO
 {
     public sealed class CategoriaVO : Categories { }
 
-    public sealed class ProductosVO : Products
-    {
-        public decimal? UniPrice { get; internal set; }
-    }
+    public sealed class ProductosVO : Products { }
+    
+       
+    
 }

@@ -32,11 +32,11 @@
             <thead class="thead-dark">
                 <tr>
                     <th id="thNombre">Nombre del Producto</th>
-                    <th id="thCtdadPRoducto">Cantidad del Producto</th>
+                    <th id="thCtdadPRoducto">Cantidad por Unidad</th>
                     <th id="thPrecUnitario">Precio Unitario</th>
-                    <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i>  Detalles</th>
-                    <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i>  Modificar</th>
-                    <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i>  Eliminar</th>
+                    <th id="thDetalles"><i class="fa fa-info-circle" aria-hidden="true"></i> Detalles</th>
+                    <th id="thEditar"><i class="fa fa-pencil" aria-hidden="true"></i> Modificar</th>
+                    <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -94,11 +94,11 @@
                 var modalProducto = $('#modalEditarProducto');
                 modalProducto.find('#tituloModal').text('Nuevo Producto');
 
-                modalProducto.find('#txtNombreProducto').val('').removeAttr('data-idcategoria');
-                modalProducto.find('#txtProveedorID').val('').removeAttr('data-idcategoria');
-                modalProducto.find('#txtCanxUni').val('').removeAttr('data-idcategoria');
-                modalProducto.find('#txtPrecioUni').val('').removeAttr('data-idcategoria');
-         
+                modalProducto.find('#txtNombreProducto').val('').removeAttr('data-idproducto');
+                modalProducto.find('#txtProveedorID').val('').removeAttr('data-idproducto');
+                modalProducto.find('#txtCanxUni').val('').removeAttr('data-idproducto');
+                modalProducto.find('#txtPrecioUni').val('').removeAttr('data-idproducto');
+            
                 modalProducto.modal('show');
             },
 
@@ -108,16 +108,16 @@
 
                 var modalProducto = $('#modalEditarProducto');
                 modalProducto.find('#tituloModal').text('Modificar Producto');
-                modalProducto.find('#txtNombreCategoria').val(categoria.CategoryName).attr('data-idcategoria', idCategoria);
-                modalProducto.find('#txtDescripcion').val(categoria.Description);
+                //modalProducto.find('#txtNombreCategoria').val(Producto.ProductName).attr('data-idproducto', idProducto);
+                //modalProducto.find('#txtDescripcion').val(categoria.Description);
                 modalProducto.modal('show');
 
             },
 
-            consultarCategoriaPorId: function (idCategoria) {
-                for (var i = 0; i < controladorCategoria.categorias.length; i++) {
-                    if (controladorCategoria.categorias[i].CategoryID == idCategoria) {
-                        return controladorCategoria.categorias[i];
+            consultarProductoPorId: function (idProducto) {
+                for (var i = 0; i < controladorProducto.productos.length; i++) {
+                    if (controladorProducto.productos[i].ProductID == idProducto) {
+                        return controladorProducto.productos[i];
                     }
                 }
             },
@@ -125,23 +125,23 @@
             guardarCambios: function () {
                 var url = '/api/Productos/registrar';
                 var metodoHttp = 'POST';
-                var txtNombre = $('#txtNombreCategoria');
+                var txtNombre = $('#txtNombreProducto');
 
-                var categoria = {
-                    CategoryName: txtNombre.val(),
+                var producto = {
+                    ProductName: txtNombre.val(),
                     Description: $('#txtDescripcion').val()
                 };
 
 
-                if (txtNombre.attr('data-idcategoria') !== undefined) {
-                    categoria.CategoryID = parseInt(txtNombre.attr('data-idcategoria'));
-                    url = '/api/categorias/modificar';
+                if (txtNombre.attr('data-idProducto') !== undefined) {
+                    producto.ProductID = parseInt(txtNombre.attr('data-idproducto'));
+                    url = '/api/productos/modificar';
                     metodoHttp = 'PUT';
                 }
 
                 $.ajax({
-                    url: '/api/Productos/modificar',
-                    type: 'POST',
+                    url: url,
+                    type: metodoHttp,
                     data: producto, //parametros que se envian al servidor
                     dataType: 'json',
                     success: controladorProducto.onRegistrarCompleto,
@@ -178,20 +178,27 @@
             crearFilaProducto: function (producto) {
                 var fila = $('<tr>');
                 var tdNombre = $('<td>').text(producto.ProductName).attr('headers', 'thNombre');
-                var tdCtdadPRoducto = $('<td>').text(categoria.UnitsInStock).attr('headers', 'thCtdadPRoducto');
-                var tdPrecUnitario = $('<td>').text(categoria.UnitPrice).attr('headers', 'thPrecUnitario');
+                var tdCtdadPRoducto = $('<td>').text(producto.QuantityPerUnit).attr('headers', 'thCtdadPRoducto');
+                var tdPrecUnitario = $('<td>').text(producto.UnitPrice).attr('headers', 'thPrecUnitario');
 
                 var tdDetalles = $('<td>').attr('headers', 'thDetalles');
                 var btnDetalles = $('<button>').addClass('btn btn-success');
                 btnDetalles.attr('data-id', producto.ProductID);
                 btnEditar.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
+                tdDetalles.append(btnDetalles);
 
                 var tdEditar = $('<td>').attr('headers', 'thEditar');
                 var btnEditar = $('<button>').addClass('btn btn-success');
                 btnEditar.attr('data-id', producto.ProductID);
                 btnEditar.html('<i class="fa fa-pencil"></i> Modificar');
                 btnEditar.on('click', controladorProducto.abrirDialogoEditarProducto);
+                tdEditar.append(btnEditar);
 
+                var tdEliminar = $('<td>').attr('headers', 'thEliminar');
+                var btnEliminar = $('<button>').addClass('btn btn-warning');
+                btnEliminar.attr('data-id', producto.ProductID);
+                btnEditar.html('<i class="fa fa-pencil"></i> Eliminar');
+                btnEditar.on('click', controladorProducto.abrirDialogoEditarProducto);
                 tdEditar.append(btnEditar);
 
                 fila.append(tdNombre, tdCtdadPRoducto, tdPrecUnitario, tdEditar);
