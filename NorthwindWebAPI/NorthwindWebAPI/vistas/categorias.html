@@ -93,6 +93,7 @@
             configurarEventos: function () {
                 $('#btnAgregar').on('click', controladorCategoria.abrirDialogoNuevaCategoria);
                 $('#btnGuardarCambios').on('click', controladorCategoria.guardarCambios);
+             
             },
 
             abrirDialogoNuevaCategoria: function () {
@@ -186,7 +187,7 @@
                 btnEditar.attr('data-id', categoria.CategoryID);
                 btnEditar.html('<i class="fa fa-pencil"></i> Modificar');
 
-                btnEditar.on('click', controladorCategoria.abrirDialogoEditarCategoria);
+                btnEditar.on('click', controladorCategoria.abrirDialogoE ditarCategoria);
 
                 tdEditar.append(btnEditar);
 

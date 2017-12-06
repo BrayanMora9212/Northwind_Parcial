@@ -153,8 +153,7 @@
                 $('#btnAgregar').on('click', controladorProducto.abrirDialogoNuevoProducto);
                 $('#btnGuardarCambios').on('click', controladorProducto.guardarCambios);
 
-                $('#btnAgregar').on('click', controladorProducto.abrirDialogoNuevoProducto);
-                $('#btnGuardarCambios').on('click', controladorProducto.guardarCambios);
+            
 
             },
 
@@ -278,7 +277,7 @@
                 var btnDetalle = $('<button>').addClass('btn btn-info');
                 btnDetalle.attr('data-id', producto.ProductID);
                 btnDetalle.html('<i class="fa fa-info-circle" aria-hidden="true"></i> Detalles');
-                btnDetalle.on('click', controladorProducto.abrirDialogoNuevoProducto);
+                btnDetalle.on('click', controladorProducto.abrirDialogoDetalleProducto);
                 tdDetalle.append(btnDetalle);
 
                 var tdEliminar = $('<td>').attr('headers', 'thEliminar');

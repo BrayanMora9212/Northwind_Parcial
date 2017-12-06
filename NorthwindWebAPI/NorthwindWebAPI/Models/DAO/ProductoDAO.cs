@@ -50,7 +50,7 @@ namespace NorthwindWebAPI.Models.DAO
                 return cnn.SaveChanges();
             }
         }
-        public int EliminarProducto(object EliminarProducto)
+        /*public int EliminarProducto(object EliminarProducto)
         {
             using(var cnn=new NorthwindEntities())
             {
@@ -61,6 +61,8 @@ namespace NorthwindWebAPI.Models.DAO
                 cnn.Entry(anteriorProducto).State = System.Data.Entity.EntityState.Deleted;
                 return cnn.SaveChanges();
             }
-        }
+        }*/
     }
 }
+
+
