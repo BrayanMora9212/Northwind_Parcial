@@ -31,7 +31,7 @@ namespace NorthwindWebAPI.Controllers
                 ProductID = int.Parse(parametros["ProductID"]),
                 ProductName = parametros["ProductName"],    
                 QuantityPerUnit = parametros["QuantityPerUnit"],
-                UnitPrice =  decimal.Parse(parametros["UnitPrice"])
+                UnitPrice = int.Parse(parametros["UnitPrice"]),
               };
             int resultado = dao.registrarProducto(nuevoProducto);
             return (resultado > 0) ? "Se registró el producto" : "Ocurrió un error al registrar el producto ";

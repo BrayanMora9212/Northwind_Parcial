@@ -56,10 +56,6 @@
                             <input type="text" id="txtNombreProducto" class="form-control" />
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="txtProveedorID"> Proveedor ID:</label>
-                            <input type="text" id="txtProveedorID" class="form-control" />
-                        </div>
-                        <div class="form-group col-md-12">
                             <label for="txtCanxUni"> Cantidad por unidad:</label>
                             <input type="text" id="txtCanxUni" class="form-control" />
                         </div>
@@ -95,7 +91,6 @@
                 modalProducto.find('#tituloModal').text('Nuevo Producto');
 
                 modalProducto.find('#txtNombreProducto').val('').removeAttr('data-idproducto');
-                modalProducto.find('#txtProveedorID').val('').removeAttr('data-idproducto');
                 modalProducto.find('#txtCanxUni').val('').removeAttr('data-idproducto');
                 modalProducto.find('#txtPrecioUni').val('').removeAttr('data-idproducto');
             
@@ -108,8 +103,9 @@
 
                 var modalProducto = $('#modalEditarProducto');
                 modalProducto.find('#tituloModal').text('Modificar Producto');
-                //modalProducto.find('#txtNombreCategoria').val(Producto.ProductName).attr('data-idproducto', idProducto);
-                //modalProducto.find('#txtDescripcion').val(categoria.Description);
+                modalProducto.find('#txtNombreProducto').val(Producto.ProductName).attr('data-idproducto', idProducto);
+                modalProducto.find('#txtCanxUni').val(categoria.QuantityPerUnit);
+                modalProducto.find('#txtPrecioUni').val(categoria.UnitPrice);
                 modalProducto.modal('show');
 
             },
@@ -129,7 +125,8 @@
 
                 var producto = {
                     ProductName: txtNombre.val(),
-                    Description: $('#txtDescripcion').val()
+                    QuantityPerUnit: $('#txtCanxUni').val(),
+                    UnitPrice: $('#txtPrecioUni').val(),
                 };
 
 
