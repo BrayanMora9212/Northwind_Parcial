@@ -19,9 +19,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="col-md-12">
-
         <h1>Gestion de Productos</h1>
+    <div class="col-md-12">
         <div class=" col-md-12 text-right">
             <button class="btn btn-primary btn-lg" id="btnAgregar">
                 <i class="fa fa-plus"></i> Agregar Nuevo Producto
@@ -39,7 +38,9 @@
                     <th id="thEliminar "><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+
+            </tbody>
         </table>
     </div>
     <!-- Modal -->
@@ -104,8 +105,8 @@
                 var modalProducto = $('#modalEditarProducto');
                 modalProducto.find('#tituloModal').text('Modificar Producto');
                 modalProducto.find('#txtNombreProducto').val(Producto.ProductName).attr('data-idproducto', idProducto);
-                modalProducto.find('#txtCanxUni').val(categoria.QuantityPerUnit);
-                modalProducto.find('#txtPrecioUni').val(categoria.UnitPrice);
+                modalProducto.find('#txtCanxUni').val(Producto.QuantityPerUnit);
+                modalProducto.find('#txtPrecioUni').val(Producto.UnitPrice);
                 modalProducto.modal('show');
 
             },
@@ -163,7 +164,7 @@
             },
 
             cargarTablaProductos: function (datos) {
-                controladorProducto.producto = datos; //esto para guardar el arreglo de categorias en la memoria en el cliente y poder acceder a los objetos despues
+                controladorProducto.productos = datos; //esto para guardar el arreglo de categorias en la memoria en el cliente y poder acceder a los objetos despues
                 var tblProductos = $('#tblProductos');
                 var tbody = tblProductos.find('tbody').empty();
                 for (var i = 0; i < datos.length; i++) {
@@ -209,11 +210,6 @@
 
         controladorProducto.init();
 
-
-
-
-
-
-    </script>  
+                                            </script>  
 </body>
 </html>
